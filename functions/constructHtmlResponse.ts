@@ -6,7 +6,10 @@ export const constructHtmlResponse = (): string => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Node.js Serverless Function Enhanced Starter</title>
+            <link rel="icon" href="https://assets.vercel.com/image/upload/front/favicon/vercel/favicon.ico" type="image/x-icon">
             <style>
+                @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+                
                 body {
                     font-family: Arial, sans-serif;
                     background-color: #121212;
@@ -51,6 +54,22 @@ export const constructHtmlResponse = (): string => {
                     border-radius: 3px;
                     color: #76ff03;
                 }
+                .link {
+                    margin-top: 20px;
+                    font-size: 1em;
+                    color: #b0bec5;
+                }
+                .github-icon {
+                    margin-right: 5px;
+                    color: #76ff03;
+                }
+                .link a {
+                    color: #76ff03;
+                    text-decoration: none;
+                }
+                .link a:hover {
+                    text-decoration: underline;
+                }
             </style>
         </head>
         <body>
@@ -63,6 +82,11 @@ export const constructHtmlResponse = (): string => {
                     <p>🔄 <strong>PUT</strong> and <strong>POST</strong> requests go to other functions in the <code class="code">functions</code> directory.</p>
                     <p>🗂️ These are chosen by the serverless handler <code class="code">ts</code> file in the <code class="code">api/</code> directory.</p>
                 </div>
+                <p class="link">
+                    <i class="fa fa-github github-icon"></i> Check out the code on GitHub:
+                    <br>
+                    <a href="https://github.com/Wal33D/serverless-vercel-function-enhanced.git" target="_blank">https://github.com/Wal33D/serverless-vercel-function-enhanced.git</a>
+                </p>
             </div>
         </body>
         </html>
