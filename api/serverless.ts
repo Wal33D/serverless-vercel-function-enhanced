@@ -1,27 +1,31 @@
-import { constructHtmlResponse } from '../functions/constructHtmlResponse';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
+import { handleGetRequest } from '../functions/handleGetRequest';
+import { handlePutRequest } from '../functions/handlePutRequest';
+import { handlePostRequest } from '../functions/handlePostRequest';
+
 export default async (req: VercelRequest, res: VercelResponse) => {
-    let status = false;
-    let message = '';
-
     try {
-        const { name = 'World' } = req.query;
-
         if (req.method === 'GET') {
-            const htmlContent = constructHtmlResponse();
+            const htmlContent = handleGetRequest();
             res.setHeader('Content-Type', 'text/html');
             return res.send(htmlContent);
+        } else if (req.method === 'PUT') {
+            const response = await handlePutRequest(req);
+            return res.json(response);
+        } else if (req.method === 'POST') {
+            const response = await handlePostRequest(req);
+            return res.json(response);
         }
 
-        message = `Hello ${name}!`;
-        status = true;
+        return res.status(405).json({
+            status: false,
+            message: `Method ${req.method} not allowed`,
+        });
     } catch (error: any) {
-        message = `Error: ${error.message}`;
+        return res.json({
+            status: false,
+            message: `Error: ${error.message}`,
+        });
     }
-
-    return res.json({
-        status,
-        message,
-    });
 };

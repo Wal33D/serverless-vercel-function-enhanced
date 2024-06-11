@@ -1,4 +1,4 @@
-export const constructHtmlResponse = (): string => {
+export const handleGetRequest = (): string => {
     return `
         <!DOCTYPE html>
         <html lang="en">
