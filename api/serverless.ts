@@ -4,26 +4,22 @@ import { handleGetRequest } from '../functions/handleGetRequest';
 import { handlePutRequest } from '../functions/handlePutRequest';
 import { handlePostRequest } from '../functions/handlePostRequest';
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+export default async (request: VercelRequest, response: VercelResponse) => {
     try {
-        if (req.method === 'GET') {
-            const htmlContent = handleGetRequest();
-            res.setHeader('Content-Type', 'text/html');
-            return res.send(htmlContent);
-        } else if (req.method === 'PUT') {
-            const response = await handlePutRequest(req);
-            return res.json(response);
-        } else if (req.method === 'POST') {
-            const response = await handlePostRequest(req);
-            return res.json(response);
+        if (request.method === 'GET') {
+            return handleGetRequest({ request, response });
+        } else if (request.method === 'PUT') {
+            return handlePutRequest({ request, response });
+        } else if (request.method === 'POST') {
+            return handlePostRequest({ request, response });
         }
 
-        return res.status(405).json({
+        return response.status(405).json({
             status: false,
-            message: `Method ${req.method} not allowed`,
+            message: `Method ${request.method} not allowed`,
         });
     } catch (error: any) {
-        return res.json({
+        return response.json({
             status: false,
             message: `Error: ${error.message}`,
         });

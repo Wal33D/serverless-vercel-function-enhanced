@@ -1,12 +1,31 @@
-export const handleGetRequest = (): string => {
-    return `
+/**
+ * This function generates an HTML response for GET requests.
+ * It extracts a 'name' query parameter from the request, capitalizes the first letter,
+ * and incorporates it into the HTML content. If the 'name' parameter is not provided,
+ * a default title without a name is used for the page's title and H1 element on the DOM.
+ *
+ * @param {object} request - The incoming Vercel request object.
+ * @param {object} response - The Vercel response object.
+ * @returns {string} - The generated HTML content.
+ */
+
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { capitalize } from '../utils/capitalize';
+
+export const handleGetRequest = ({ request, response }: { request: VercelRequest, response: VercelResponse }) => {
+    const { name } = request.query;
+    const userName = Array.isArray(name) ? name[0] : name || '';
+    const pageTitle = userName ? `Hello ${capitalize(userName)}!` : 'Node.js Serverless Function²';
+
+    const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Node.js Serverless Function Enhanced Starter</title>
+            <title>${pageTitle}</title>
             <link rel="icon" href="https://assets.vercel.com/image/upload/front/favicon/vercel/favicon.ico" type="image/x-icon">
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
                 
@@ -21,13 +40,13 @@ export const handleGetRequest = (): string => {
                     align-items: center;
                     height: 100vh;
                 }
-                .container {
-                    position: relative;
+                .custom-container {
                     text-align: center;
                     background: #1e1e1e;
                     padding: 20px;
                     border-radius: 10px;
                     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+                    margin: 10px;
                 }
                 h1 {
                     color: #bb86fc;
@@ -70,25 +89,60 @@ export const handleGetRequest = (): string => {
                 .link a:hover {
                     text-decoration: underline;
                 }
+                .example {
+                    font-size: 0.9em;
+                    color: #b0bec5;
+                }
+                .example h2 {
+                    color: #bb86fc;
+                }
+                pre {
+                    color: #e0e0e0; /* Lighten the text color for better visibility */
+                    background: #333; /* Dark background for contrast */
+                    padding: 10px;
+                    border-radius: 5px;
+                    overflow-x: auto;
+                }
             </style>
         </head>
         <body>
             <div class="container">
-                <span class="online-indicator"></span>
-                <h1>Node.js Serverless Function²</h1>
-                <p>Explore our features and enjoy your stay. 😊</p>
-                <div class="footer">
-                    <p>✅ This is where a <strong>200 Request</strong> to <code class="code">/</code> using our <code class="code">vercel.json</code> rewrites produces.</p>
-                    <p>🔄 <strong>PUT</strong> and <strong>POST</strong> requests go to other functions in the <code class="code">functions</code> directory.</p>
-                    <p>🗂️ These are chosen by the serverless handler <code class="code">ts</code> file in the <code class="code">api/</code> directory.</p>
+                <div class="row">
+                    <div class="col-12 col-md-8 mx-auto">
+                        <div class="custom-container">
+                            <span class="online-indicator"></span>
+                            <h1>${pageTitle}</h1>
+                            <p>Explore our features and enjoy your stay. 😊</p>
+                            <div class="footer">
+                                <p>✅ This is where a <strong>200 Request</strong> to <code class="code">/</code> using our <code class="code">vercel.json</code> rewrites produces.</p>
+                                <p>🔄 <strong>PUT</strong> and <strong>POST</strong> requests go to other functions in the <code class="code">functions</code> directory.</p>
+                                <p>🗂️ These are chosen by the serverless handler <code class="code">ts</code> file in the <code class="code">api/</code> directory.</p>
+                            </div>
+                            <p class="link">
+                                <i class="fa fa-github github-icon"></i> Check out the code on GitHub:
+                                <br>
+                                <a href="https://github.com/Wal33D/serverless-vercel-function-enhanced.git" target="_blank">https://github.com/Wal33D/serverless-vercel-function-enhanced.git</a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <p class="link">
-                    <i class="fa fa-github github-icon"></i> Check out the code on GitHub:
-                    <br>
-                    <a href="https://github.com/Wal33D/serverless-vercel-function-enhanced.git" target="_blank">https://github.com/Wal33D/serverless-vercel-function-enhanced.git</a>
-                </p>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-8 mx-auto">
+                        <div class="custom-container">
+                            <h2>Example Requests:</h2>
+                            <p>GET Request: <code class="code">This is the current page you are viewing</code></p>
+                            <p>PUT Request: <code class="code">curl -X PUT "http://localhost:3000/?name=Stan"</code></p>
+                            <p>Response: <pre>{"status":true,"message":"Hello Stan! PUT request handled successfully","method":"PUT"}</pre></p>
+                            <p>POST Request: <code class="code">curl -X POST "http://localhost:3000/?name=Stan"</code></p>
+                            <p>Response: <pre>{"status":true,"message":"Hello Stan! POST request handled successfully","method":"POST"}</pre></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </body>
         </html>
     `;
+
+    response.setHeader('Content-Type', 'text/html');
+    response.send(htmlContent);
 };
