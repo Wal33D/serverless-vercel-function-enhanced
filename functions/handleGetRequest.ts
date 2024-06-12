@@ -12,7 +12,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { capitalize } from '../utils/capitalize';
 
-export const handleGetRequest = ({ request, response }: { request: VercelRequest, response: VercelResponse }) => {
+export const handleGetRequest = async ({ request, response }: { request: VercelRequest, response: VercelResponse }): Promise<void> => {
     const { name } = request.query;
     const userName = Array.isArray(name) ? name[0] : name || '';
     const pageTitle = userName ? `Hello ${capitalize(userName)}!` : 'Node.js Serverless Function²';
@@ -56,8 +56,8 @@ export const handleGetRequest = ({ request, response }: { request: VercelRequest
                 }
                 .online-indicator {
                     position: absolute;
-                    top: 10px;
-                    right: 10px;
+                    top: 20px;
+                    right: 35px;
                     width: 10px;
                     height: 10px;
                     background-color: #00e676;
@@ -131,9 +131,9 @@ export const handleGetRequest = ({ request, response }: { request: VercelRequest
                         <div class="custom-container">
                             <h2>Example Requests:</h2>
                             <p>GET Request: <code class="code">This is the current page you are viewing</code></p>
-                            <p>PUT Request: <code class="code">curl -X PUT "http://localhost:3000/?name=Stan"</code></p>
+                            <p>PUT Request: <code class="code">curl -X PUT "https://vercel.demo.function.serverless.aquataze.com/?name=Stan"</code></p>
                             <p>Response: <pre>{"status":true,"message":"Hello Stan! PUT request handled successfully","method":"PUT"}</pre></p>
-                            <p>POST Request: <code class="code">curl -X POST "http://localhost:3000/?name=Stan"</code></p>
+                            <p>POST Request: <code class="code">curl -X POST "https://vercel.demo.function.serverless.aquataze.com/?name=Stan"</code></p>
                             <p>Response: <pre>{"status":true,"message":"Hello Stan! POST request handled successfully","method":"POST"}</pre></p>
                         </div>
                     </div>

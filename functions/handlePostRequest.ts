@@ -11,7 +11,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { capitalize } from '../utils/capitalize';
 
-export const handlePostRequest = async ({ request, response }: { request: VercelRequest, response: VercelResponse }) => {
+export const handlePostRequest = async ({ request, response }: { request: VercelRequest, response: VercelResponse }): Promise<void> => {
     let status = false;
     let message = '';
     let method = 'POST';

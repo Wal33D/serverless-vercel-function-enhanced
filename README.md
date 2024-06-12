@@ -1,60 +1,188 @@
-Sure! Here are the simplified steps to set up Vercel and deploy using the "Import a Third-Party Git Repository" feature with your repository URL.
-
-### Steps to Set Up Vercel and Deploy
-
-1. **Sign Up or Log In to Vercel:**
-   - Go to [Vercel](https://vercel.com) and sign up for a new account or log in if you already have one.
-
-2. **Import a Third-Party Git Repository:**
-   - After logging in, click on the "New Project" button.
-   - Select the "Import Project" option.
-   - Click on "Import Git Repository".
-   - Enter your repository URL: `https://github.com/Wal33D/serverless-vercel-function-enhanced`.
-
-3. **Configure Your Project:**
-   - After entering the repository URL, click on "Continue".
-   - Vercel will automatically detect your project settings. You can review these settings and adjust if necessary.
-
-4. **Deploy the Project:**
-   - Click on the "Deploy" button.
-   - Vercel will start the deployment process, which may take a few minutes.
-
-5. **Access Your Deployed Project:**
-   - Once the deployment is complete, you will be provided with a URL where you can access your deployed project.
-   - You can manage and view your deployments in the Vercel dashboard.
-
-### Example Readme Section
-
-Here’s how you might explain these steps in your README.md:
-
-```markdown
 # Node.js Serverless Function Enhanced Starter
 
-Simple Node.js + Vercel example that returns a "Hello World" response.
+This repository contains a simple Node.js serverless function setup with Vercel. It demonstrates handling different HTTP methods (GET, PUT, POST, DELETE, PATCH, OPTIONS, HEAD) using Vercel's serverless functions. This enhanced starter also includes examples of how to handle requests and provide appropriate responses.
 
-## How to Use
+## Features
 
-### Deploying with Vercel
+- Handles multiple HTTP methods: GET, PUT, POST, DELETE, PATCH, OPTIONS, HEAD.
+- Returns JSON responses for unsupported methods, indicating the request type.
+- Demonstrates the use of TypeScript for type safety and modern JavaScript features.
+- Includes example HTML content with Bootstrap for styling.
 
-Follow these steps to set up and deploy this project using Vercel:
+## Deployment
 
-1. **Sign Up or Log In to Vercel:**
-   - Visit [Vercel](https://vercel.com) and sign up for a new account or log in if you already have one.
+You can deploy this project using Vercel. Follow the instructions below to get started.
 
-2. **Import the Git Repository:**
-   - Click on the "New Project" button in the Vercel dashboard.
-   - Select "Import Project" and then "Import Git Repository".
-   - Enter the following repository URL: `https://github.com/Wal33D/serverless-vercel-function-enhanced`.
+### One-Click Deploy
 
-3. **Configure and Deploy:**
-   - Review and adjust the project settings if necessary.
-   - Click "Deploy" to start the deployment process.
+Deploy the example using Vercel:
 
-4. **Access Your Project:**
-   - Once the deployment is complete, you will receive a URL to access your live project.
-   - Manage and view your deployments in the Vercel dashboard.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/Wal33D/serverless-vercel-function-enhanced.git&project-name=node-serverless-enhanced&repository-name=node-serverless-enhanced)
 
-That's it! Your project should now be live on Vercel.
+### Clone and Deploy
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Wal33D/serverless-vercel-function-enhanced.git
 ```
 
-This provides a clear, concise guide for users to set up and deploy your project using Vercel.
+2. Install the Vercel CLI:
+
+```bash
+npm i -g vercel
+```
+
+3. Run the app at the root of the repository:
+
+```bash
+vercel dev
+```
+
+## Function Handlers
+
+### GET Request Handler
+
+Generates an HTML response for GET requests, incorporating the 'name' query parameter into the page title and content.
+
+### PUT Request Handler
+
+Handles PUT requests, extracts the 'name' query parameter, and constructs a response message.
+
+### POST Request Handler
+
+Handles POST requests, extracts the 'name' query parameter, and constructs a response message.
+
+### Default Handler
+
+Handles unsupported methods (DELETE, PATCH, OPTIONS, HEAD) by returning a JSON response indicating the request type.
+
+## Example Requests
+
+Example requests to test the serverless function:
+
+- GET Request: This is the current page you are viewing.
+- PUT Request:
+
+```bash
+curl -X PUT "https://vercel.demo.function.serverless.aquataze.com/?name=Stan"
+```
+
+Response:
+
+```json
+{
+  "status": true,
+  "message": "Hello Stan! PUT request handled successfully",
+  "method": "PUT"
+}
+```
+
+- POST Request:
+
+```bash
+curl -X POST "https://vercel.demo.function.serverless.aquataze.com/?name=Stan"
+```
+
+Response:
+
+```json
+{
+  "status": true,
+  "message": "Hello Stan! POST request handled successfully",
+  "method": "POST"
+}
+```
+
+## Serverless Function Handler
+
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+import { handleGetRequest } from '../functions/handleGetRequest';
+import { handlePutRequest } from '../functions/handlePutRequest';
+import { handlePostRequest } from '../functions/handlePostRequest';
+
+/**
+ * Serverless Function Handler
+ *
+ * This file handles incoming HTTP requests using Vercel's serverless functions. It routes
+ * the requests to the appropriate handler based on the HTTP method (GET, PUT, POST, DELETE,
+ * PATCH, OPTIONS, HEAD). If a method is not explicitly handled, a JSON response is returned
+ * indicating the request type for safe handling of unsupported methods.
+ *
+ * Handlers:
+ * - GET: handleGetRequest
+ * - PUT: handlePutRequest
+ * - POST: handlePostRequest
+ * - DELETE, PATCH, OPTIONS, HEAD: handleDefaultRequest (returns JSON response logging the request type)
+ *
+ * The handlers are expected to return a Promise<void> and handle the response accordingly.
+ *
+ * @param {VercelRequest} request - The incoming Vercel request object.
+ * @param {VercelResponse} response - The Vercel response object.
+ * @returns {Promise<void>} - The response is sent directly by the handler.
+ */
+
+type MethodHandlers = {
+    [key in 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD']: (params: { request: VercelRequest, response: VercelResponse }) => Promise<void>;
+};
+
+const handleDefaultRequest = async ({ request, response }: { request: VercelRequest, response: VercelResponse }): Promise<void> => {
+    response.status(200).json({
+        status: true,
+        message: `Request method ${request.method} received and logged.`,
+        method: request.method,
+    });
+};
+
+const methodHandlers: MethodHandlers = {
+    GET: handleGetRequest,
+    PUT: handlePutRequest,
+    POST: handlePostRequest,
+    DELETE: handleDefaultRequest,
+    PATCH: handleDefaultRequest,
+    OPTIONS: handleDefaultRequest,
+    HEAD: handleDefaultRequest,
+};
+
+const handler = async (request: VercelRequest, response: VercelResponse) => {
+    try {
+        const method = request.method as keyof MethodHandlers;
+
+        if (method in methodHandlers) {
+            return methodHandlers[method]({ request, response });
+        }
+
+        response.status(405).json({
+            status: false,
+            message: `Method ${request.method} not allowed`,
+        });
+    } catch (error: any) {
+        response.status(500).json({
+            status: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+};
+
+export default handler;
+```
+
+## Additional Configuration
+
+Add this configuration in your `vercel.json` file:
+
+```json
+{
+  "functions": {
+    "api/serverless.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/api/serverless" }
+  ]
+}
+```
