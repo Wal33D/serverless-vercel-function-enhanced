@@ -15,10 +15,8 @@ You can deploy this project using Vercel. Follow the instructions below to get s
 
 ### One-Click Deploy
 
-Deploy the example using Vercel:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/Wal33D/serverless-vercel-function-enhanced.git&project-name=node-serverless-enhanced&repository-name=node-serverless-enhanced)
-
+Deploy the example using Vercel, Import the repository as a 3rd Party Repo, and deploy the project 
+ https://github.com/Wal33D/serverless-vercel-function-enhanced.git
 ### Clone and Deploy
 
 1. Clone the repository:
